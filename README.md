@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gemini AI Chatbot
 
-## Getting Started
+This is a [Next.js](https://nextjs.org) project that features a beautiful, modern chatbot interface powered by Google's Gemini AI.
 
-First, run the development server:
+## Features
+
+- 🤖 Chat with Google's Gemini AI
+- 🎨 Beautiful, responsive UI with dark mode support
+- 💬 Real-time messaging interface
+- 🔒 Secure API key handling via environment variables
+- ⚡ Built with Next.js 15 and React 19
+
+## Setup
+
+1. **Clone the repository and install dependencies:**
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+bun install
+```
+
+2. **Get your Gemini API key:**
+   - Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
+   - Create a new API key
+   - Copy the API key
+
+3. **Set up environment variables:**
+   - Copy the `.env.local` file and add your API key:
+   ```bash
+   cp .env.local .env.local
+   ```
+   - Edit `.env.local` and replace `your_api_key_here` with your actual Gemini API key:
+   ```
+   GEMINI_API_KEY=your_actual_api_key_here
+   ```
+
+4. **Run the development server:**
+
+```bash
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to start chatting with Gemini AI!
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `app/page.tsx` - Main page component
+- `app/components/GeminiChatbot.tsx` - Chat interface component
+- `app/api/chat/route.ts` - API endpoint for Gemini AI integration
+- `.env.local` - Environment variables (not committed to git)
 
-## Learn More
+## Usage
 
-To learn more about Next.js, take a look at the following resources:
+Simply type your message in the chat interface and press Enter or click Send. The AI will respond to your questions about coding, science, general knowledge, and more!
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Technologies Used
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Next.js 15
+- React 19
+- TypeScript
+- Tailwind CSS
+- Google Generative AI SDK
+- Bun
 
 ## Deploy on Vercel
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Don't forget to add your `GEMINI_API_KEY` environment variable in your Vercel project settings!
