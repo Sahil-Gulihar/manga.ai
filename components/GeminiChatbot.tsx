@@ -71,8 +71,7 @@ export default function GeminiChatbot() {
       console.error("Error calling Gemini API:", error);
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content:
-          "Sorry, I encountered an error. Please try again.",
+        content: "Sorry, I encountered an error. Please try again.",
         role: "assistant",
         timestamp: new Date(),
       };
@@ -89,21 +88,23 @@ export default function GeminiChatbot() {
     }
   };
 
-  const lastAssistantMessage = messages.filter(msg => msg.role === 'assistant').pop();
+  const lastAssistantMessage = messages
+    .filter((msg) => msg.role === "assistant")
+    .pop();
 
   return (
     <div className="fixed inset-0 p-4 sm:p-6 pointer-events-none">
       {/* Messages Area - Only shows the last AI message, positioned higher */}
-      <div className="absolute bottom-[40%] left-1/2 transform -translate-x-1/2 w-full max-w-md space-y-3 overflow-y-auto pb-1 pointer-events-auto max-h-[25vh]">
+      <div className="absolute bottom-[40%] left-1/2 transform -translate-x-1/2 w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl space-y-3 overflow-y-auto pb-1 pointer-events-auto max-h-[25vh]">
         {lastAssistantMessage && (
           <div
             key={lastAssistantMessage.id}
             className="flex justify-start" // Assistant messages are typically on the left
           >
-            <div
-              className="speech-bubble speech-bubble-assistant shadow-md max-w-full break-words backdrop-blur-md bg-opacity-80"
-            >
-              <p className="text-sm whitespace-pre-wrap">{lastAssistantMessage.content}</p>
+            <div className="speech-bubble speech-bubble-assistant shadow-md max-w-full break-words backdrop-blur-md">
+              <p className="text-sm whitespace-pre-wrap">
+                {lastAssistantMessage.content}
+              </p>
               <p className="text-xs opacity-70 mt-1 text-right">
                 {lastAssistantMessage.timestamp.toLocaleTimeString()}
               </p>
@@ -114,7 +115,7 @@ export default function GeminiChatbot() {
       </div>
 
       {/* Input Area - Positioned at the very bottom */}
-      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md pointer-events-auto">
+      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-sm sm:max-w-lg md:max-w-xl lg:max-w-2xl pointer-events-auto">
         <div className="flex items-center space-x-2 bg-black bg-opacity-50 backdrop-blur-md p-3 rounded-xl shadow-xl mx-4 mb-4 sm:mx-0 sm:mb-0">
           <textarea
             value={input}

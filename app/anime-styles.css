@@ -86,47 +86,57 @@
 /* Speech bubble styles */
 .speech-bubble {
   position: relative;
-  padding: 10px 15px;
-  border-radius: 15px;
+  padding: 12px 18px; /* Slightly more padding */
+  border-radius: 20px; /* More rounded */
   animation: bubble-appear 0.3s ease-out forwards;
+  line-height: 1.4; /* Improve text spacing */
 }
 
 .speech-bubble-assistant {
-  background-color: #f0f0f0; /* Light grey for assistant */
-  color: #333;
-  border-bottom-left-radius: 0; /* Tail effect */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.9
+  ); /* White with slight transparency */
+  color: #050505; /* Dark text for contrast */
+  /* .speech-bubble already provides border-radius: 20px;
+     If specific corners needed adjustment for the new top tail, it would be here.
+     For a centered top tail, the general 20px radius on all corners is fine. */
 }
 
 .speech-bubble-assistant::before {
   content: "";
   position: absolute;
-  bottom: 0;
-  left: -10px; /* Position of the tail */
+  top: -11px; /* Position tip of the tail slightly above the bubble, adjust for border thickness */
+  left: 50%; /* Center the tail horizontally */
+  transform: translateX(-50%);
   width: 0;
   height: 0;
-  border-style: solid;
-  border-width: 0 10px 10px 0; /* Triangle shape */
-  border-color: transparent #f0f0f0 transparent transparent; /* Tail color matches bubble */
-  transform: translateY(0px); /* Align with bottom */
+  border-left: 10px solid transparent; /* Left slope of the upward tail */
+  border-right: 10px solid transparent; /* Right slope of the upward tail */
+  border-bottom: 12px solid rgba(255, 255, 255, 0.9); /* Visible part of the tail, pointing upwards */
+  /* Color matches bubble background */
 }
 
 .speech-bubble-user {
   background-color: #007bff; /* Blue for user */
   color: white;
-  border-bottom-right-radius: 0; /* Tail effect */
+  border-bottom-right-radius: 6px; /* Soften the corner for tail */
 }
 
 .speech-bubble-user::after {
   content: "";
   position: absolute;
-  bottom: 0px; /* Align with bottom of the bubble */
-  right: -10px; /* Position of the tail */
+  bottom: 0px;
+  right: -9px;
   width: 0;
   height: 0;
   border-style: solid;
-  border-width: 0 0 10px 10px; /* Triangle shape, mirrored */
-  border-color: transparent transparent transparent #007bff; /* Tail color matches bubble */
-  transform: translateY(0px); /* Align with bottom */
+  /* Tail shape for right: top, right, bottom, left widths */
+  border-width: 0 0 12px 12px; /* 0 top, 0 right, 12px bottom, 12px left */
+  /* Tail color for right: top, right, bottom, left colors */
+  border-color: transparent transparent transparent #007bff;
 }
 
 @keyframes bubble-appear {
