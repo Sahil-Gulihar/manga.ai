@@ -46,35 +46,37 @@
 
 /* Minimal chat styles */
 .chat-message-container {
-  position: fixed;
-  bottom: 80px; /* Adjust as needed, above input */
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90%;
-  max-width: 600px;
+  position: absolute; /* Changed from fixed */
+  bottom: 80px; /* Position above input */
+  left: 12%; /* Increased from 1rem to create more horizontal space */
+  right: 12%; /* Increased from 1rem to create more horizontal space */
+  width: auto; /* Allow left/right to determine width (now 100% - 24% = 76%) */
+  /* transform: translateX(-50%); */ /* Removed */
   max-height: calc(
-    100vh - 150px
-  ); /* Adjust based on input height and padding */
+    100% - 90px
+  ); /* Max height relative to parent, leaving space for input and top margin */
   overflow-y: auto;
-  padding: 10px;
+  padding: 10px; /* Internal padding for messages */
   display: flex;
   flex-direction: column-reverse; /* New messages at the bottom */
+  /* max-width: 600px; */ /* Can be kept if desired, but parent is constrained */
 }
 
 .chat-input-container {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90%;
-  max-width: 600px;
-  background-color: rgba(0, 0, 0, 0.7);
-  padding: 10px;
-  border-radius: 10px;
+  position: absolute; /* Changed from fixed */
+  bottom: 1rem; /* 16px from bottom of parent */
+  left: 1rem; /* 16px from left of parent */
+  right: 1rem; /* 16px from right of parent */
+  width: auto; /* Allow left/right to determine width */
+  /* transform: translateX(-50%); */ /* Removed */
+  background-color: rgba(0, 0, 0, 0.75); /* Slightly more opaque */
+  padding: 0.75rem; /* 12px padding */
+  border-radius: 0.75rem; /* 12px border radius */
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+  /* max-width: 600px; */ /* Can be kept, parent is constrained */
 }
 
-/* Ensure animations don't interfere with new layout */
+/* Ensure animations don\'t interfere with new layout */
 .anime-glow {
   box-shadow: none;
 }
@@ -99,53 +101,64 @@
     255,
     0.9
   ); /* White with slight transparency */
-  color: #050505; /* Dark text for contrast */
-  /* .speech-bubble already provides border-radius: 20px;
-     If specific corners needed adjustment for the new top tail, it would be here.
-     For a centered top tail, the general 20px radius on all corners is fine. */
-}
-
-.speech-bubble-assistant::before {
-  content: "";
-  position: absolute;
-  top: -11px; /* Position tip of the tail slightly above the bubble, adjust for border thickness */
-  left: 50%; /* Center the tail horizontally */
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 10px solid transparent; /* Left slope of the upward tail */
-  border-right: 10px solid transparent; /* Right slope of the upward tail */
-  border-bottom: 12px solid rgba(255, 255, 255, 0.9); /* Visible part of the tail, pointing upwards */
-  /* Color matches bubble background */
+  color: #333; /* Darker text for readability */
+  align-self: flex-start; /* Align to the left */
+  margin-right: auto; /* Push to left */
+  margin-left: 0;
+  max-width: 90%; /* Max width of the bubble */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .speech-bubble-user {
-  background-color: #007bff; /* Blue for user */
+  background-color: rgba(
+    120,
+    82,
+    220,
+    0.85
+  ); /* Purple with slight transparency */
   color: white;
-  border-bottom-right-radius: 6px; /* Soften the corner for tail */
+  align-self: flex-end; /* Align to the right */
+  margin-left: auto; /* Push to right */
+  margin-right: 0;
+  max-width: 90%; /* Max width of the bubble */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.speech-bubble-user::after {
+/* Manga-style speech bubble tail for assistant (pointing up) */
+.speech-bubble-assistant::after {
   content: "";
   position: absolute;
-  bottom: 0px;
-  right: -9px;
+  bottom: 0;
+  left: 20px; /* Position tail on the left side */
   width: 0;
   height: 0;
-  border-style: solid;
-  /* Tail shape for right: top, right, bottom, left widths */
-  border-width: 0 0 12px 12px; /* 0 top, 0 right, 12px bottom, 12px left */
-  /* Tail color for right: top, right, bottom, left colors */
-  border-color: transparent transparent transparent #007bff;
+  border: 10px solid transparent;
+  border-top-color: rgba(255, 255, 255, 0.9); /* Match bubble background */
+  border-bottom: 0;
+  border-left: 0; /* Make tail point upwards and slightly to the right */
+  margin-bottom: -10px; /* Overlap with bubble bottom */
 }
 
+/* Speech bubble animation */
 @keyframes bubble-appear {
-  0% {
+  from {
     opacity: 0;
-    transform: scale(0.8) translateY(10px);
+    transform: translateY(10px) scale(0.95);
   }
-  100% {
+  to {
     opacity: 1;
-    transform: scale(1) translateY(0);
+    transform: translateY(0) scale(1);
   }
+}
+
+/* Timestamp style */
+.message-timestamp {
+  font-size: 0.65rem; /* Smaller font size */
+  color: #aaa; /* Light gray color */
+  margin-top: 4px; /* Space above timestamp */
+  text-align: right;
+}
+
+.speech-bubble-assistant .message-timestamp {
+  color: #666; /* Darker gray for assistant bubble */
 }

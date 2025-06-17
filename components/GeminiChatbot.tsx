@@ -100,7 +100,7 @@ export default function GeminiChatbot({ systemPrompt }: GeminiChatbotProps) {
   return (
     <div className="fixed inset-0 p-4 sm:p-6 pointer-events-none">
       {/* Messages Area - Only shows the last AI message, positioned higher */}
-      <div className="absolute bottom-[40%] left-1/2 transform -translate-x-1/2 w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-xl space-y-3 overflow-y-auto pb-1 pointer-events-auto max-h-[25vh]">
+      <div className="absolute bottom-[40%] left-1/2 transform -translate-x-1/2 w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-[470px] space-y-3 overflow-y-auto pb-1 pointer-events-auto md:ml-8 max-h-[25vh]">
         {lastAssistantMessage && (
           <div
             key={lastAssistantMessage.id}
