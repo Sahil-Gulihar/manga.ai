@@ -1,0 +1,71 @@
+"use client";
+
+import { useParams } from "next/navigation";
+import GeminiChatbot from "@/components/GeminiChatbot";
+import { characters, Character } from "@/app/characters";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+
+export default function ChatPage() {
+  const params = useParams();
+  const characterId = params.characterId as string;
+  const [character, setCharacter] = useState<Character | undefined>(undefined);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (characterId) {
+      const foundCharacter = characters.find((char) => char.id === characterId);
+      setCharacter(foundCharacter);
+    }
+    setIsLoading(false);
+  }, [characterId]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">
+        <p>Loading character...</p>
+      </div>
+    );
+  }
+
+  if (!character) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white p-8">
+        <h1 className="text-4xl font-bold text-red-500 mb-8">
+          Character Not Found
+        </h1>
+        <p className="text-xl mb-8">
+          The character you are looking for does not exist.
+        </p>
+        <Link href="/" legacyBehavior>
+          <a className="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg text-lg font-semibold transition-colors">
+            Choose a Character
+          </a>
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className="min-h-screen bg-cover bg-center bg-no-repeat flex flex-col"
+      style={{ backgroundImage: `url(${character.backgroundImageUrl})` }}
+    >
+      <div className="absolute top-4 left-4 z-20">
+        <Link href="/" legacyBehavior>
+          <a className="px-4 py-2 bg-gray-800 bg-opacity-70 text-white rounded-lg hover:bg-opacity-90 transition-opacity text-sm">
+            &larr; Back to Characters
+          </a>
+        </Link>
+      </div>
+      <div className="flex-grow flex flex-col items-center justify-end p-4 relative">
+        {/* Chatbot component will be positioned by its own styles within this container */}
+        <GeminiChatbot systemPrompt={character.systemPrompt} />
+      </div>
+      {/* Optional: Add character name or other info subtly */}
+      {/* <div className="absolute bottom-4 right-4 bg-black bg-opacity-50 text-white p-2 rounded">
+        {character.name}
+      </div> */}
+    </div>
+  );
+}

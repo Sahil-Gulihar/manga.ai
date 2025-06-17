@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    const { message } = await request.json();
+    const { message, systemPrompt: customSystemPrompt } = await request.json();
 
     if (!message) {
       return NextResponse.json(
@@ -23,10 +23,12 @@ export async function POST(request: NextRequest) {
     const genAI = new GoogleGenerativeAI(apiKey);
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
-    const systemPrompt =
+    const defaultSystemPrompt =
       "You are a wonderful, kind, and understanding woman. Your responses should reflect this personality. Be supportive and engaging.";
 
-    const fullMessage = `${systemPrompt}\n\nUser: ${message}`;
+    const activeSystemPrompt = customSystemPrompt || defaultSystemPrompt;
+
+    const fullMessage = `${activeSystemPrompt}\\n\\nUser: ${message}`;
 
     const result = await model.generateContent(fullMessage);
     const response = await result.response;

@@ -9,7 +9,11 @@ interface Message {
   timestamp: Date;
 }
 
-export default function GeminiChatbot() {
+interface GeminiChatbotProps {
+  systemPrompt: string;
+}
+
+export default function GeminiChatbot({ systemPrompt }: GeminiChatbotProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -51,6 +55,7 @@ export default function GeminiChatbot() {
         },
         body: JSON.stringify({
           message: currentInput,
+          systemPrompt: systemPrompt, // Pass the systemPrompt prop here
         }),
       });
 
