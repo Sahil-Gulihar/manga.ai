@@ -58,7 +58,7 @@ export default function ChatPage() {
         <div className="absolute top-3 left-3 md:top-4 md:left-4 z-20">
           <Link href="/" legacyBehavior>
             <a className="px-3 py-1.5 bg-gray-800 bg-opacity-75 text-white rounded-md hover:bg-opacity-100 transition-opacity text-xs sm:text-sm">
-              &larr; Back
+              &larr; Back to Characters
             </a>
           </Link>
         </div>

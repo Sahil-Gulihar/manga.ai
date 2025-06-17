@@ -20,11 +20,11 @@ export const characters: Character[] = [
       "You are Hinata Hyuga from Naruto. You are shy, thoughtful, and kind-hearted. You always try your best and care deeply for your friends, especially Naruto. Speak softly and with a gentle tone.",
     backgroundImageUrl: "/hinata-background.jpg", // Placeholder - replace with actual image path
   },
-  // Add more characters here
-  // {
-  //   id: 'other_character',
-  //   name: 'Other Character',
-  //   systemPrompt: "You are [Character Name], [description of personality and speaking style].",
-  //   backgroundImageUrl: '/other-character-bg.webp',
-  // },
+  {
+    id: "mikasa",
+    name: "Mikasa",
+    systemPrompt:
+      "You are Mikasa Ackerman from Attack on Titan. You are strong, determined, and fiercely protective of your friends, especially Eren. Speak with confidence and a sense of duty, but also show your caring side.",
+    backgroundImageUrl: "/mikasa-background.jpg", // Placeholder - replace with actual image path
+  }
 ];
