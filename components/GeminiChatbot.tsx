@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 interface Message {
   id: string;
@@ -17,6 +17,7 @@ export default function GeminiChatbot({ systemPrompt }: GeminiChatbotProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [currentChunkIndex, setCurrentChunkIndex] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -29,7 +30,37 @@ export default function GeminiChatbot({ systemPrompt }: GeminiChatbotProps) {
 
   const clearChat = () => {
     setMessages([]);
+    setCurrentChunkIndex(0);
   };
+
+  // Function to split long messages into chunks
+  const splitMessageIntoChunks = (content: string, maxLength = 150) => {
+    if (content.length <= maxLength) return [content];
+
+    const words = content.split(" ");
+    const chunks = [];
+    let currentChunk = "";
+
+    for (const word of words) {
+      if ((currentChunk + " " + word).length <= maxLength) {
+        currentChunk += (currentChunk ? " " : "") + word;
+      } else {
+        if (currentChunk) chunks.push(currentChunk);
+        currentChunk = word;
+      }
+    }
+
+    if (currentChunk) chunks.push(currentChunk);
+    return chunks;
+  };
+
+  const goToNextChunk = useCallback(() => {
+    setCurrentChunkIndex((prev) => prev + 1);
+  }, []);
+
+  const goToPrevChunk = useCallback(() => {
+    setCurrentChunkIndex((prev) => Math.max(0, prev - 1));
+  }, []);
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -72,6 +103,7 @@ export default function GeminiChatbot({ systemPrompt }: GeminiChatbotProps) {
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, assistantMessage]);
+      setCurrentChunkIndex(0); // Reset to first chunk for new message
     } catch (error) {
       console.error("Error calling Gemini API:", error);
       const errorMessage: Message = {
@@ -81,6 +113,7 @@ export default function GeminiChatbot({ systemPrompt }: GeminiChatbotProps) {
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, errorMessage]);
+      setCurrentChunkIndex(0); // Reset to first chunk for error message
     } finally {
       setIsLoading(false);
     }
@@ -97,21 +130,115 @@ export default function GeminiChatbot({ systemPrompt }: GeminiChatbotProps) {
     .filter((msg) => msg.role === "assistant")
     .pop();
 
+  // Get chunks for the last assistant message
+  const messageChunks = lastAssistantMessage
+    ? splitMessageIntoChunks(lastAssistantMessage.content)
+    : [];
+
+  const currentChunk = messageChunks[currentChunkIndex];
+  const hasMoreChunks = currentChunkIndex < messageChunks.length - 1;
+  const hasPrevChunks = currentChunkIndex > 0;
+
+  // Keyboard navigation for chunks
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const assistantMessage = messages
+        .filter((msg) => msg.role === "assistant")
+        .pop();
+
+      if (!assistantMessage) return;
+
+      const chunks = splitMessageIntoChunks(assistantMessage.content);
+      const hasMore = currentChunkIndex < chunks.length - 1;
+      const hasPrev = currentChunkIndex > 0;
+
+      if (e.key === "ArrowRight" && hasMore) {
+        e.preventDefault();
+        goToNextChunk();
+      } else if (e.key === "ArrowLeft" && hasPrev) {
+        e.preventDefault();
+        goToPrevChunk();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [currentChunkIndex, messages, goToNextChunk, goToPrevChunk]);
+
   return (
     <div className="fixed inset-0 p-4 sm:p-6 pointer-events-none">
       {/* Messages Area - Only shows the last AI message, positioned higher */}
       <div className="absolute bottom-[40%] left-1/2 transform -translate-x-1/2 w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-[470px] space-y-3 overflow-y-auto pb-1 pointer-events-auto md:ml-8 max-h-[25vh]">
-        {lastAssistantMessage && (
+        {lastAssistantMessage && currentChunk && (
           <div
-            key={lastAssistantMessage.id}
+            key={`${lastAssistantMessage.id}-${currentChunkIndex}`}
             className="flex justify-start" // Assistant messages are typically on the left
           >
-            <div className="speech-bubble speech-bubble-assistant shadow-md max-w-full break-words backdrop-blur-md">
-              <p className="text-sm whitespace-pre-wrap">
-                {lastAssistantMessage.content}
-              </p>
+            <div
+              className="speech-bubble speech-bubble-assistant shadow-md max-w-full break-words backdrop-blur-md relative cursor-pointer select-none"
+              onClick={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect();
+                const clickX = e.clientX - rect.left;
+                const width = rect.width;
+
+                if (clickX < width / 2 && hasPrevChunks) {
+                  // Clicked on left half
+                  goToPrevChunk();
+                } else if (clickX >= width / 2 && hasMoreChunks) {
+                  // Clicked on right half
+                  goToNextChunk();
+                }
+              }}
+            >
+              <p className="text-sm whitespace-pre-wrap">{currentChunk}</p>
+
+              {/* Click areas indicators */}
+              {(hasMoreChunks || hasPrevChunks) && (
+                <>
+                  {/* Left click area indicator */}
+                  {hasPrevChunks && (
+                    <div className="absolute left-2 top-1/2 transform -translate-y-1/2 opacity-20 hover:opacity-40 transition-opacity pointer-events-none">
+                      <span className="text-xs">←</span>
+                    </div>
+                  )}
+
+                  {/* Right click area indicator */}
+                  {hasMoreChunks && (
+                    <div className="absolute right-2 top-1/2 transform -translate-y-1/2 opacity-20 hover:opacity-40 transition-opacity pointer-events-none">
+                      <span className="text-xs">→</span>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* Bottom indicators */}
+              <div className="flex justify-between items-center mt-1">
+                {/* Chunk counter */}
+                {messageChunks.length > 1 && (
+                  <span className="text-xs opacity-40">
+                    {currentChunkIndex + 1}/{messageChunks.length}
+                  </span>
+                )}
+
+                <div className="flex-1"></div>
+
+                {/* Click to continue indicator */}
+                {hasMoreChunks && (
+                  <span className="text-xs opacity-50 animate-pulse">
+                    click to continue
+                  </span>
+                )}
+
+                {/* Click for previous indicator */}
+                {!hasMoreChunks && hasPrevChunks && (
+                  <span className="text-xs opacity-50">
+                    click left to go back
+                  </span>
+                )}
+              </div>
+
               <p className="text-xs opacity-70 mt-1 text-right">
-                {lastAssistantMessage.timestamp.toLocaleTimeString()}
+                {/* {lastAssistantMessage.timestamp.toLocaleTimeString()} */}
               </p>
             </div>
           </div>
