@@ -18,7 +18,9 @@ export default function GeminiChatbot({ systemPrompt }: GeminiChatbotProps) {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [currentChunkIndex, setCurrentChunkIndex] = useState(0);
+  const [isInputFocused, setIsInputFocused] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -166,16 +168,16 @@ export default function GeminiChatbot({ systemPrompt }: GeminiChatbotProps) {
   }, [currentChunkIndex, messages, goToNextChunk, goToPrevChunk]);
 
   return (
-    <div className="fixed inset-0 p-4 sm:p-6 pointer-events-none">
+    <div className="fixed inset-0 pointer-events-none flex justify-center md:justify-center">
       {/* Messages Area - Only shows the last AI message, positioned higher */}
-      <div className="absolute bottom-[40%] left-1/2 transform -translate-x-1/2 w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-[470px] space-y-3 overflow-y-auto pb-1 pointer-events-auto md:ml-8 max-h-[25vh]">
+      <div className="absolute bottom-[40%] w-full max-w-[calc(100%-4rem)] md:max-w-md lg:max-w-lg xl:max-w-xl space-y-3 overflow-y-auto pb-1 pointer-events-auto max-h-[30vh] md:max-h-[35vh] pl-4 pr-2 md:pl-8">
         {lastAssistantMessage && currentChunk && (
           <div
             key={`${lastAssistantMessage.id}-${currentChunkIndex}`}
             className="flex justify-start" // Assistant messages are typically on the left
           >
             <div
-              className="speech-bubble speech-bubble-assistant shadow-md max-w-full break-words backdrop-blur-md relative cursor-pointer select-none"
+              className="speech-bubble speech-bubble-assistant shadow-md w-full max-w-[90%] md:max-w-[80%] break-words backdrop-blur-md relative cursor-pointer select-none ml-0 md:ml-4"
               onClick={(e) => {
                 const rect = e.currentTarget.getBoundingClientRect();
                 const clickX = e.clientX - rect.left;
@@ -190,7 +192,7 @@ export default function GeminiChatbot({ systemPrompt }: GeminiChatbotProps) {
                 }
               }}
             >
-              <p className="text-sm whitespace-pre-wrap">{currentChunk}</p>
+              <p className="text-sm whitespace-pre-wrap break-words w-full">{currentChunk}</p>
 
               {/* Click areas indicators */}
               {(hasMoreChunks || hasPrevChunks) && (
@@ -247,57 +249,136 @@ export default function GeminiChatbot({ systemPrompt }: GeminiChatbotProps) {
       </div>
 
       {/* Input Area - Positioned at the very bottom */}
-      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-sm sm:max-w-lg md:max-w-xl lg:max-w-2xl pointer-events-auto">
-        <div className="flex items-center space-x-2 bg-black bg-opacity-50 backdrop-blur-md p-3 rounded-xl shadow-xl mx-4 mb-4 sm:mx-0 sm:mb-0">
-          <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Type your message..."
-            rows={1}
-            className="flex-grow p-2 bg-transparent text-white placeholder-gray-300 focus:outline-none resize-none min-h-[40px] max-h-[120px]"
-            disabled={isLoading}
-          />
-          <button
-            onClick={sendMessage}
-            disabled={isLoading || !input.trim()}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-500 disabled:cursor-not-allowed transition-colors duration-200 focus:outline-none"
-          >
-            {isLoading ? (
-              <svg
-                className="animate-spin h-5 w-5 text-white"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                ></path>
-              </svg>
-            ) : (
-              "Send"
-            )}
-          </button>
-          {/* Clear button: only show if there's an assistant message displayed or any messages in history */}
-          {(lastAssistantMessage || messages.length > 0) && (
-            <button
-              onClick={clearChat}
-              className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:bg-gray-500 transition-colors duration-200 focus:outline-none"
-              title="Clear Chat"
-            >
-              Clear
-            </button>
-          )}
+      <div className="fixed bottom-0 left-0 right-0 pb-4 px-4 pointer-events-auto flex justify-center">
+        <div className="w-full max-w-[calc(100%-2rem)] md:max-w-md lg:max-w-lg xl:max-w-xl">
+          <div className="relative">
+            {/* Enhanced glass effect background */}
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/15 to-purple-500/15 rounded-2xl backdrop-blur-xl shadow-2xl -z-10" />
+            <div className="relative w-full flex items-center bg-white/5 backdrop-blur-2xl p-1.5 rounded-2xl border border-white/10 shadow-xl">
+              <textarea
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyPress={handleKeyPress}
+                onFocus={() => setIsInputFocused(true)}
+                onBlur={() => setIsInputFocused(false)}
+                ref={textareaRef}
+                placeholder="Type your message..."
+                rows={1}
+                className="flex-grow p-4 pr-14 bg-transparent text-white placeholder-white/80 focus:outline-none resize-none min-h-[56px] max-h-[160px] rounded-xl transition-all duration-300 focus:ring-2 focus:ring-white/30"
+                style={{
+                  textShadow: '0 1px 2px rgba(0,0,0,0.2)',
+                  scrollbarWidth: 'thin',
+                  scrollbarColor: 'rgba(255,255,255,0.15) transparent',
+                  paddingRight: isInputFocused ? '3.5rem' : '3.5rem' // Keep consistent padding
+                }}
+                disabled={isLoading}
+              />
+              <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center space-x-1">
+                {input.trim() ? (
+                  <button
+                    onClick={() => {
+                      setInput('');
+                      textareaRef.current?.focus();
+                    }}
+                    className="p-1.5 rounded-full text-gray-400 hover:text-white hover:bg-white/10 focus:outline-none focus:ring-1 focus:ring-white/30 flex items-center justify-center"
+                    aria-label="Clear input"
+                    style={{
+                      width: '32px',
+                      height: '32px',
+                    }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
+                    </svg>
+                  </button>
+                ) : null}
+                <button
+                  onClick={sendMessage}
+                  disabled={isLoading || !input.trim()}
+                  className="rounded-full bg-transparent text-white hover:text-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed focus:outline-none flex-shrink-0 flex items-center justify-center"
+                  aria-label="Send message"
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    opacity: isInputFocused || input.trim() ? 1 : 0.5,
+                    transform: 'translateY(0)'
+                  }}
+                >
+                  {isLoading ? (
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 transform rotate-45 -translate-y-px"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                      />
+                    </svg>
+                  )}
+                </button>
+                {/* Clear chat history button - shows when there are messages */}
+                {(lastAssistantMessage || messages.length > 0) && (
+                  <button
+                    onClick={clearChat}
+                    className="p-2 rounded-full text-gray-300 hover:text-red-400 hover:bg-white/5 transition-colors duration-200 focus:outline-none focus:ring-1 focus:ring-red-400/30"
+                    title="Clear chat history"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
+                    </svg>
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
