@@ -109,7 +109,14 @@ export default function ChatPage() {
 
         {/* Container for the chat UI elements */}
         <div className="flex-grow flex flex-col items-start justify-end p-0 relative w-full h-full z-10 pl-4 md:pl-8">
-          <GeminiChatbot systemPrompt={character.systemPrompt} />
+          <GeminiChatbot 
+            systemPrompt={character.systemPrompt}
+            character={{
+              id: character.id,
+              name: character.name,
+              imageUrl: character.backgroundImageUrl // Or use a dedicated avatar URL if available
+            }}
+          />
         </div>
 
         {/* Add the twinkle animation */}
