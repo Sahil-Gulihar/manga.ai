@@ -9,11 +9,18 @@ interface Message {
   timestamp: Date;
 }
 
-interface GeminiChatbotProps {
-  systemPrompt: string;
+interface Character {
+  id: string;
+  name: string;
+  imageUrl: string;
 }
 
-export default function GeminiChatbot({ systemPrompt }: GeminiChatbotProps) {
+interface GeminiChatbotProps {
+  systemPrompt: string;
+  character: Character;
+}
+
+export default function GeminiChatbot({ systemPrompt,character }: GeminiChatbotProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -174,10 +181,10 @@ export default function GeminiChatbot({ systemPrompt }: GeminiChatbotProps) {
         {lastAssistantMessage && currentChunk && (
           <div
             key={`${lastAssistantMessage.id}-${currentChunkIndex}`}
-            className="flex justify-start" // Assistant messages are typically on the left
+            className="flex flex-col w-full"
           >
             <div
-              className="speech-bubble speech-bubble-assistant shadow-md w-full max-w-[90%] md:max-w-[80%] break-words backdrop-blur-md relative cursor-pointer select-none ml-0 md:ml-4"
+              className="speech-bubble speech-bubble-assistant shadow-md w-full max-w-[90%] md:max-w-[80%] break-words backdrop-blur-md relative cursor-pointer select-none"
               onClick={(e) => {
                 const rect = e.currentTarget.getBoundingClientRect();
                 const clickX = e.clientX - rect.left;
@@ -238,8 +245,20 @@ export default function GeminiChatbot({ systemPrompt }: GeminiChatbotProps) {
                   </span>
                 )}
               </div>
-
-              <p className="text-xs opacity-70 mt-1 text-right">
+            </div>
+            
+            {/* Character info below the bubble */}
+            <div className="flex items-center gap-2 mt-3">
+              <div className="w-15 h-15 sm:w-8 sm:h-8 rounded-full overflow-hidden border-2 border-white/20 flex-shrink-0">
+                <img 
+                  src={character.imageUrl} 
+                  alt={character.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <span className="text-xs text-white/80">{character.name}</span>
+              <div className="flex-1"></div>
+              <p className="text-xs opacity-70">
                 {/* {lastAssistantMessage.timestamp.toLocaleTimeString()} */}
               </p>
             </div>

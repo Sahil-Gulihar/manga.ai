@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { characters, Character } from "../characters";
+import { BorderBeam } from "@/components/magicui/border-beam";
 import { Heart, Sparkles, Home } from "lucide-react";
 
 export default function CharacterSelectionPage() {
@@ -117,11 +118,22 @@ export default function CharacterSelectionPage() {
                   <div className="relative mb-6">
                     <div className="relative">
                       <div className="relative w-48 h-48 mx-auto">
+                        {/* BorderBeam for circular image */}
+                        <div className="absolute -inset-1 rounded-full overflow-hidden z-0">
+                          <BorderBeam 
+                            duration={10} 
+                            size={250}
+                            colorFrom="#8b5cf6"
+                            colorTo="#ec4899"
+                            borderWidth={2}
+                            className="w-full h-full"
+                          />
+                        </div>
                         <div className="w-full h-full rounded-full overflow-hidden relative z-10">
                           <img
                             src={character.backgroundImageUrl}
                             alt={character.name}
-                           className={`w-full h-full object-cover transition-all duration-500 ease-out ${
+                            className={`w-full h-full object-cover transition-all duration-500 ease-out ${
                               isHovered ? "scale-105 brightness-105" : "scale-100 brightness-95"
                             }`}
                           />
@@ -158,20 +170,9 @@ export default function CharacterSelectionPage() {
 
                   {/* Character Info */}
                   <div className="space-y-2">
-                    <h3
-                      className={`text-2xl font-light transition-colors duration-300 ${
-                        isHovered ? `text-${characterColor}-200` : `text-${characterColor}-300`
-                      }`}
-                    >
+                    <h3 className="text-2xl font-light text-white transition-opacity duration-300 hover:opacity-80">
                       {character.name}
                     </h3>
-                    <p
-                      className={`text-sm transition-all duration-300 ${
-                        isHovered ? `text-${characterColor}-200 opacity-100` : "text-gray-500 opacity-70"
-                      }`}
-                    >
-                      {/* {character.subtitle || ""} */}
-                    </p>
                   </div>
               </Link>
             );
