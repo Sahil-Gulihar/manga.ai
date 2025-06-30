@@ -20,8 +20,12 @@ const geistMono = Geist_Mono({
 
 
 export const metadata: Metadata = {
-  title: "Yuki-chan - AI Companion",
-  description: "Chat with Yuki-chan, your adorable AI companion with manwha-style interface",
+  title: "Manwha AI ",
+  description: "Chat with AI companion with manwha-style interface",
+  keywords: ["Manwha AI", "Manga", "manwha", "chatbot", "AI companion", "chat", "companion", "Sahil Gulihar", "open source"],
+  openGraph: {
+    images: 'meta/og-image.png',
+  },
   icons: {
     icon: '/logo.svg',
     shortcut: '/logo.svg',
