@@ -215,7 +215,23 @@ export default function CharacterSelectionPage() {
       </div>
 
       <div className="fixed bottom-4 right-4 z-50 text-xs text-gray-400">
-        Made by Sahil Gulihar and Saloni with{" "}
+        Made by{" "}
+        <a
+          href="https://x.com/sahil_gulihar_"
+          target="_blank"
+          className="underline hover:text-gray-200"
+        >
+          Sahil Gulihar
+        </a>{" "}
+        and{" "}
+        <a
+          href="https://x.com/saloni_who"
+          target="_blank"
+          className="underline hover:text-gray-200"
+        >
+          Saloni
+        </a>{" "}
+        with{" "}
         <a
           href="https://github.com/sahil-gulihar/c.ai"
           target="_blank"

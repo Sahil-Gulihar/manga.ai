@@ -20,7 +20,10 @@ interface GeminiChatbotProps {
   character: Character;
 }
 
-export default function GeminiChatbot({ systemPrompt,character }: GeminiChatbotProps) {
+export default function GeminiChatbot({
+  systemPrompt,
+  character,
+}: GeminiChatbotProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -199,7 +202,9 @@ export default function GeminiChatbot({ systemPrompt,character }: GeminiChatbotP
                 }
               }}
             >
-              <p className="text-sm whitespace-pre-wrap break-words w-full">{currentChunk}</p>
+              <p className="text-sm whitespace-pre-wrap break-words w-full">
+                {currentChunk}
+              </p>
 
               {/* Click areas indicators */}
               {(hasMoreChunks || hasPrevChunks) && (
@@ -246,22 +251,8 @@ export default function GeminiChatbot({ systemPrompt,character }: GeminiChatbotP
                 )}
               </div>
             </div>
-            
-            {/* Character info below the bubble */}
-            <div className="flex items-center gap-2 mt-3">
-              <div className="w-15 h-15 sm:w-8 sm:h-8 rounded-full overflow-hidden border-2 border-white/20 flex-shrink-0">
-                <img 
-                  src={character.imageUrl} 
-                  alt={character.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <span className="text-xs text-white/80">{character.name}</span>
-              <div className="flex-1"></div>
-              <p className="text-xs opacity-70">
-                {/* {lastAssistantMessage.timestamp.toLocaleTimeString()} */}
-              </p>
-            </div>
+
+
           </div>
         )}
         <div ref={messagesEndRef} />
@@ -285,10 +276,10 @@ export default function GeminiChatbot({ systemPrompt,character }: GeminiChatbotP
                 rows={1}
                 className="flex-grow p-4 pr-14 bg-transparent text-white placeholder-white/80 focus:outline-none resize-none min-h-[56px] max-h-[160px] rounded-xl transition-all duration-300 focus:ring-2 focus:ring-white/30"
                 style={{
-                  textShadow: '0 1px 2px rgba(0,0,0,0.2)',
-                  scrollbarWidth: 'thin',
-                  scrollbarColor: 'rgba(255,255,255,0.15) transparent',
-                  paddingRight: isInputFocused ? '3.5rem' : '3.5rem' // Keep consistent padding
+                  textShadow: "0 1px 2px rgba(0,0,0,0.2)",
+                  scrollbarWidth: "thin",
+                  scrollbarColor: "rgba(255,255,255,0.15) transparent",
+                  paddingRight: isInputFocused ? "3.5rem" : "3.5rem", // Keep consistent padding
                 }}
                 disabled={isLoading}
               />
@@ -296,14 +287,14 @@ export default function GeminiChatbot({ systemPrompt,character }: GeminiChatbotP
                 {input.trim() ? (
                   <button
                     onClick={() => {
-                      setInput('');
+                      setInput("");
                       textareaRef.current?.focus();
                     }}
                     className="p-1.5 rounded-full text-gray-400 hover:text-white hover:bg-white/10 focus:outline-none focus:ring-1 focus:ring-white/30 flex items-center justify-center"
                     aria-label="Clear input"
                     style={{
-                      width: '32px',
-                      height: '32px',
+                      width: "32px",
+                      height: "32px",
                     }}
                   >
                     <svg
@@ -328,10 +319,10 @@ export default function GeminiChatbot({ systemPrompt,character }: GeminiChatbotP
                   className="rounded-full bg-transparent text-white hover:text-gray-200 disabled:text-gray-500 disabled:cursor-not-allowed focus:outline-none flex-shrink-0 flex items-center justify-center"
                   aria-label="Send message"
                   style={{
-                    width: '36px',
-                    height: '36px',
+                    width: "36px",
+                    height: "36px",
                     opacity: isInputFocused || input.trim() ? 1 : 0.5,
-                    transform: 'translateY(0)'
+                    transform: "translateY(0)",
                   }}
                 >
                   {isLoading ? (
