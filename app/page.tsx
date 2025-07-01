@@ -78,7 +78,7 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-20">
+            {/* <div className="absolute top-2 right-2 sm:top-4 sm:right-4 z-20">
               <button
                 onClick={() => router.push("/anime")}
                 className="bg-gradient-to-r from-purple-900 via-black to-purple-900 hover:from-purple-800 hover:via-gray-900 hover:to-purple-800 text-white border-2 border-purple-400/50 hover:border-purple-300/70 text-xs sm:text-sm md:text-base lg:text-lg px-4 sm:px-5 md:px-6 py-1.5 sm:py-2 md:py-2.5 rounded-full transition-all duration-500 hover:scale-110 hover:shadow-lg hover:shadow-purple-500/25 font-medium min-w-[80px] sm:min-w-[90px] md:min-w-[100px] text-center backdrop-blur-sm"
@@ -88,7 +88,7 @@ export default function Home() {
                   Start
                 </span>
               </button>
-            </div>
+            </div> */}
 
             <div
               className="w-full bg-gradient-to-br from-gray-50 via-purple-50/30 to-gray-100 rounded-xl sm:rounded-2xl shadow-2xl shadow-purple-900/20 border border-purple-200/20"
@@ -142,9 +142,9 @@ export default function Home() {
                       </div>
                     </div>
                     <div className="mt-3 sm:mt-4 lg:mt-6 p-2 sm:p-3 lg:p-4">
-                      <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-black bg-gradient-to-r from-black via-purple-800 to-gray-900 bg-clip-text text-transparent leading-tight">
-                        <span className="block">Find your Partner</span>
-                        <span className="block bg-gradient-to-r from-gray-800 via-indigo-700 to-black bg-clip-text text-transparent font-extrabold">
+                      <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-black leading-tight">
+                        <span className="block text-black lg:bg-gradient-to-r lg:from-black lg:via-purple-800 lg:to-black lg:bg-clip-text lg:text-transparent">Find your Partner</span>
+                        <span className="block text-gray-800 font-extrabold lg:bg-gradient-to-r lg:from-black lg:via-indigo-900 lg:to-black lg:bg-clip-text lg:text-transparent">
                           Designed to Tolerate you!
                         </span>
                       </h3>
